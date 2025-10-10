@@ -11,12 +11,15 @@
         <meta charset="UTF-8">
         <title>Dashboard - Nhân viên</title>
         <link rel="stylesheet" href="../../../css/styledashboard.css"/>
+        <link rel="stylesheet" href="../../../css/header.css"/>
+        <link rel="stylesheet" href="../../../css/sidebar.css"/>
+        <link rel="stylesheet" href="../../../css/footer.css"/>
     </head>
     <body>
 
         <%@ include file="../../../components/header.jsp" %>
         <%@ include file="../../../components/sidebar.jsp" %>
-        <link rel="stylesheet" href="../css/style.css">
+
 
         <div class="main-content">
             <div class="card">

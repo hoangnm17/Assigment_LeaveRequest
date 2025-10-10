@@ -11,6 +11,9 @@
         <meta charset="UTF-8">
         <title>Dashboard - Nhân sự</title>
         <link rel="stylesheet" href="../../../css/styledashboard.css"/>
+        <link rel="stylesheet" href="../../../css/header.css"/>
+        <link rel="stylesheet" href="../../../css/sidebar.css"/>
+        <link rel="stylesheet" href="../../../css/footer.css"/>
     </head>
     <body>
 
