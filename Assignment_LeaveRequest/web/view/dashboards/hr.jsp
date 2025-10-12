@@ -9,16 +9,20 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Dashboard - Nhân sự</title>
-        <link rel="stylesheet" href="../../../css/styledashboard.css"/>
-        <link rel="stylesheet" href="../../../css/header.css"/>
-        <link rel="stylesheet" href="../../../css/sidebar.css"/>
-        <link rel="stylesheet" href="../../../css/footer.css"/>
+        <title>Dashboard - Nhân viên</title>
+        <%
+            String contextPath = request.getContextPath();
+        %>
+
+        <link rel="stylesheet" href="<%=contextPath%>/css/styledashboard.css">
+        <link rel="stylesheet" href="<%=contextPath%>/css/header.css">
+        <link rel="stylesheet" href="<%=contextPath%>/css/sidebar.css">
+        <link rel="stylesheet" href="<%=contextPath%>/css/footer.css">
     </head>
     <body>
 
-        <%@ include file="../../../components/header.jsp" %>
-        <%@ include file="../../../components/sidebar.jsp" %>
+        <%@ include file="/components/header.jsp" %>
+        <%@ include file="/components/sidebar.jsp" %>
 
 
         <div class="main-content">
@@ -30,8 +34,9 @@
             </div>
         </div>
 
-        <%@ include file="../../../components/footer.jsp" %>
+        <%@ include file="/components/footer.jsp" %>
 
     </body>
 </html>
+
 
