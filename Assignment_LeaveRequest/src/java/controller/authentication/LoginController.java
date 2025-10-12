@@ -14,7 +14,7 @@ import models.User;
 
 /**
  *
- * @author sonnt
+ * @author 84911
  */
 public class LoginController extends HttpServlet {
 
@@ -26,20 +26,24 @@ public class LoginController extends HttpServlet {
 //        UserDBContext db = new UserDBContext();
 //        User user = db.get(username, password);
         User user = new User();
-        if (user != null) {
+        user.setUserName(username);
+        user.setPassword(password);
+        
+        if (user.getUserName() != username) {
             HttpSession session = request.getSession();
             session.setAttribute("auth", user);
             request.setAttribute("message", "login successful!");
+            response.sendRedirect("view/RoleType/Admin/dashboard.jsp");
         } else {
             request.setAttribute("message", "login failed!");
         }
-        request.getRequestDispatcher("view/auth/response.jsp").forward(request, response);
+        
 
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("view/auth/login.html").forward(request, response);
+        request.getRequestDispatcher("view/authentication/login.jsp").forward(request, response);
     }
 
 }

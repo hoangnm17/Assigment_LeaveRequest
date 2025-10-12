@@ -13,7 +13,7 @@ import models.User;
 
 /**
  *
- * @author sonnt
+ * @author 84911
  */
 public abstract class BaseRequiredAuthenticationController extends HttpServlet {
 
