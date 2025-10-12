@@ -13,7 +13,9 @@ public class User extends BaseModel{
     private boolean gender;
     private Date dob;
     private int phoneNumber;
-    private int roleType;
+    private Role role;
+    private Department department;
+    private User manager;
 
     public User() {
     }
@@ -75,13 +77,31 @@ public class User extends BaseModel{
         this.phoneNumber = phoneNumber;
     }
 
-    public int getRoleType() {
-        return roleType;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleType(int roleType) {
-        this.roleType = roleType;
+    public void setRole(Role role) {
+        this.role = role;
     }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public User getManager() {
+        return manager;
+    }
+
+    public void setManager(User manager) {
+        this.manager = manager;
+    }
+
+
 
     
 
