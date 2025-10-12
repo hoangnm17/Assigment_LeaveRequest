@@ -14,7 +14,7 @@
     <body>
 
         <%
-            String role = (String) session.getAttribute("userRole");
+            String role = "HR";
         %>
 
         <aside class="sidebar">
@@ -48,7 +48,7 @@
                 <li><a href="#">👤 Hồ sơ cá nhân</a></li>
 
                 <% } else { %>
-                <li><a href="../index.jsp">🔐 Vui lòng đăng nhập</a></li>
+                <li><a href="../../../index.jsp">🔐 Vui lòng đăng nhập</a></li>
                     <% } %>
 
                 <li><a href="../logout.jsp">🚪 Đăng xuất</a></li>

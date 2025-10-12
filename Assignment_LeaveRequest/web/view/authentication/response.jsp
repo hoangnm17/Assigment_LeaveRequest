@@ -1,6 +1,6 @@
 <%-- 
-    Document   : a
-    Created on : Oct 2, 2025, 11:54:55 PM
+    Document   : login
+    Created on : Oct 12, 2025, 10:02:03 PM
     Author     : 84911
 --%>
 
@@ -9,9 +9,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>HR Home</title>
+        <title>JSP Page</title>
     </head>
     <body>
-        <a href="login">Login</a>
+        <h1>This is response<h1>
     </body>
 </html>
