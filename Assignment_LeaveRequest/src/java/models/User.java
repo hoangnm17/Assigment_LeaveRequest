@@ -4,12 +4,12 @@ package models;
 
 import java.util.Date;
 
-public class User {
-    private int userId;
+public class User extends BaseModel{
+
     private String userName;
     private String password;
     private String fullName;
-    private String userGmail;
+    private String email;
     private boolean gender;
     private Date dob;
     private int phoneNumber;
@@ -18,13 +18,6 @@ public class User {
     public User() {
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public String getUserName() {
         return userName;
@@ -50,12 +43,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getUserGmail() {
-        return userGmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserGmail(String userGmail) {
-        this.userGmail = userGmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public boolean isGender() {
