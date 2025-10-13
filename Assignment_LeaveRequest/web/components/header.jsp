@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="models.User"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,12 +13,19 @@
         <title>JSP Page</title>
     </head>
     <body>
+
+        <%
+            User user = (User) session.getAttribute("userName");
+            String name = (user != null) ? user.getFullName() : "Khách";
+        %>
+        
         <header class="header">
             <div class="header-left">
                 <h2>🏢 Hệ thống quản lý đơn xin nghỉ</h2>
             </div>
             <div class="header-right">
-                <span>Xin chào, <strong><%= session.getAttribute("userName") != null ? session.getAttribute("userName") : "Khách" %></strong></span>
+                <span>Xin chào, <strong><%= name %></strong></span> |
+
             </div>
         </header>
 

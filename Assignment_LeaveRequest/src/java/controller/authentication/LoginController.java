@@ -4,6 +4,7 @@
  */
 package controller.authentication;
 
+import dal.UserDBContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,21 +21,20 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
+        String email = request.getParameter("username");
         String password = request.getParameter("password");
 
-//        UserDBContext db = new UserDBContext();
-//        User user = db.get(username, password);
-        User user = new User();
-        user.setUserName(username);
-        user.setPassword(password);
+        UserDBContext db = new UserDBContext();
+        User user = db.getUser(email, password);
+
         
-        if (user.getUserName() != username) {
+        if (user != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("auth", user);
+            session.setAttribute("userName", user);
             request.setAttribute("message", "login successful!");
-            response.sendRedirect("view/RoleType/Admin/dashboard.jsp");
+            response.sendRedirect("view/dashboards/admin.jsp");
         } else {
+            response.getWriter().print("Ngu");
             request.setAttribute("message", "login failed!");
         }
         

@@ -51,7 +51,7 @@
                 <li><a href="../../../index.jsp">🔐 Vui lòng đăng nhập</a></li>
                     <% } %>
 
-                <li><a href="../logout.jsp">🚪 Đăng xuất</a></li>
+                <li><a href="../../logout">🚪 Đăng xuất</a></li>
             </ul>
         </aside>
 
