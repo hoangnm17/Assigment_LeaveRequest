@@ -4,6 +4,7 @@
     Author     : 84911
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -34,6 +35,21 @@
                 <button type="submit" class="btn-primary">Đăng nhập</button>
             </div>
 
+            <c:if test="${not empty message}">
+                <p style="color: red;" class="error-message">${message}</p>
+            </c:if>
+
         </form>
+
+        <script>
+            const togglePw = document.getElementById("togglePw");
+            const passwordInput = document.getElementById("password");
+
+            togglePw.addEventListener("click", () => {
+                const isHidden = passwordInput.type === "password";
+                passwordInput.type = isHidden ? "text" : "password";
+                togglePw.textContent = isHidden ? "Ẩn" : "Hiện";
+            });
+        </script>
     </body>
 </html>
