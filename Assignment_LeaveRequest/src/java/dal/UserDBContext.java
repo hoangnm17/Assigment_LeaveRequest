@@ -4,25 +4,35 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import models.Role;
 import models.User;
 
 public class UserDBContext extends DBContext<User> {
 
     public User getUser(String email, String password) {
         try {
-            String sql = "SELECT Email, Password, FullName FROM [Users] WHERE Email=? AND Password=?";
+            String sql = """
+                        SELECT u.UserID, u.Email, u.FullName, rt.RoleName
+                        FROM [Users] u
+                        JOIN [RoleTypes] rt ON u.RoleID = rt.RoleID
+                        WHERE u.Email = ? AND u.Password = ?
+                        """;
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, email);
             stm.setString(2, password);
-            
 
             ResultSet rs = stm.executeQuery();
 
             if (rs.next()) {
                 User user = new User();
-                user.setEmail(email);
-                user.setPassword(password);
+                user.setId(rs.getInt("UserID"));
+                user.setEmail(rs.getString("Email"));
                 user.setFullName(rs.getNString("FullName"));
+                
+                Role role = new Role();
+                role.setRoleName(rs.getString("RoleName"));
+                user.setRole(role);
+                
                 return user;
             }
         } catch (SQLException ex) {
@@ -30,7 +40,7 @@ public class UserDBContext extends DBContext<User> {
         } finally {
             closeConnection();
         }
-        
+
         return null;
     }
 

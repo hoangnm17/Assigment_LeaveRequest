@@ -26,19 +26,16 @@ public class LoginController extends HttpServlet {
 
         UserDBContext db = new UserDBContext();
         User user = db.getUser(email, password);
-
-        
+       
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("userName", user);
-            request.setAttribute("message", "login successful!");
             response.sendRedirect("view/dashboards/admin.jsp");
         } else {
-            response.getWriter().print("Ngu");
-            request.setAttribute("message", "login failed!");
+            request.setAttribute("message", "Tài khoản hoặc mật khẩu không chính xác!");
+            request.getRequestDispatcher("view/authentication/login.jsp").forward(request, response);
         }
         
-
     }
 
     @Override
