@@ -11,14 +11,10 @@
         <meta charset="UTF-8">
         <title>Dashboard - Quản trị viên</title>
         
-        <%
-            String contextPath = request.getContextPath();
-        %>
-
-        <link rel="stylesheet" href="<%=contextPath%>/css/styledashboard.css">
-        <link rel="stylesheet" href="<%=contextPath%>/css/header.css">
-        <link rel="stylesheet" href="<%=contextPath%>/css/sidebar.css">
-        <link rel="stylesheet" href="<%=contextPath%>/css/footer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styledashboard.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     </head>
 
     <body>
