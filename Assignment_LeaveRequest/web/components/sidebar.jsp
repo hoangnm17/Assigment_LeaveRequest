@@ -4,6 +4,7 @@
     Author     : 84911
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,45 +14,48 @@
     </head>
     <body>
 
-        <%
-            String role = "HR";
-        %>
+        <c:set var="role" value="${sessionScope.userName.role.roleName}" />
 
         <aside class="sidebar">
             <ul>
-                <% if ("Admin".equals(role)) { %>
-                <li><a href="../dashboard/admin.jsp">🏠 Trang chủ</a></li>
-                <li><a href="#">👥 Quản lý nhân viên</a></li>
-                <li><a href="#">📂 Quản lý phòng ban</a></li>
-                <li><a href="#">📝 Tất cả đơn xin nghỉ</a></li>
-                <li><a href="#">💬 Quản lý phản hồi</a></li>
-                <li><a href="#">📞 Quản lý liên hệ</a></li>
+                <%-- Using <c:choose> is the JSTL equivalent of a Java switch or if-else-if block --%>
+                <c:choose>
+                    <%-- Case 1: Role is 'Admin' --%>
+                    <c:when test="${role == 'Admin'}">
+                        <li><a href="${pageContext.request.contextPath}/view/dashboards/admin.jsp">🏠 Trang chủ</a></li>
+                        <li><a href="#">👥 Quản lý nhân viên</a></li>
+                        <li><a href="#">📂 Quản lý phòng ban</a></li>
+                        <li><a href="#">📝 Tất cả đơn xin nghỉ</a></li>
+                        <li><a href="#">💬 Quản lý phản hồi</a></li>
+                        <li><a href="#">📞 Quản lý liên hệ</a></li>
+                        </c:when>
 
-                <% } else if ("HR".equals(role)) { %>
-                <li><a href="../dashboard/hr.jsp">🏠 Trang chủ</a></li>
-                <li><a href="#">📄 Đơn chờ duyệt</a></li>
-                <li><a href="#">📊 Báo cáo nghỉ phép</a></li>
-                <li><a href="#">👤 Hồ sơ nhân viên</a></li>
-                <li><a href="#">💬 Quản lý phản hồi</a></li>
-                <li><a href="#">📞 Quản lý liên hệ</a></li>
+                    <%-- Case 2: Role is 'Manager' --%>
+                    <c:when test="${role == 'Manager'}">
+                        <li><a href="${pageContext.request.contextPath}/view/dashboards/manager.jsp">🏠 Trang chủ</a></li>
+                        <li><a href="#">📄 Đơn thuộc nhóm</a></li>
+                        <li><a href="#">📈 Thống kê nhóm</a></li>
+                        <li><a href="#">👤 Hồ sơ cá nhân</a></li>
+                        </c:when>
 
-                <% } else if ("Manager".equals(role)) { %>
-                <li><a href="../dashboard/manager.jsp">🏠 Trang chủ</a></li>
-                <li><a href="#">📄 Đơn thuộc nhóm</a></li>
-                <li><a href="#">📈 Thống kê nhóm</a></li>
-                <li><a href="#">👤 Hồ sơ cá nhân</a></li>
+                    <%-- Case 3: Role is 'Employee' --%>
+                    <c:when test="${role == 'Employee'}">
+                        <li><a href="${pageContext.request.contextPath}/view/dashboards/employee.jsp">🏠 Trang chủ</a></li>
+                        <li><a href="#">📝 Tạo đơn xin nghỉ</a></li>
+                        <li><a href="#">📋 Danh sách đơn của tôi</a></li>
+                        <li><a href="#">👤 Hồ sơ cá nhân</a></li>
+                        </c:when>
 
-                <% } else if ("Employee".equals(role)) { %>
-                <li><a href="../dashboard/employee.jsp">🏠 Trang chủ</a></li>
-                <li><a href="#">📝 Tạo đơn xin nghỉ</a></li>
-                <li><a href="#">📋 Danh sách đơn của tôi</a></li>
-                <li><a href="#">👤 Hồ sơ cá nhân</a></li>
+                    <%-- Default Case: No role found (not logged in) --%>
+                    <c:otherwise>
+                        <li><a href="${pageContext.request.contextPath}/index.jsp">🔐 Vui lòng đăng nhập</a></li>
+                        </c:otherwise>
+                    </c:choose>
 
-                <% } else { %>
-                <li><a href="../../../index.jsp">🔐 Vui lòng đăng nhập</a></li>
-                    <% } %>
-
-                <li><a href="../../logout">🚪 Đăng xuất</a></li>
+                <%-- Common link for all logged-in users --%>
+                <c:if test="${not empty role}">
+                    <li><a href="${pageContext.request.contextPath}/logout">🚪 Đăng xuất</a></li>
+                    </c:if>
             </ul>
         </aside>
 
