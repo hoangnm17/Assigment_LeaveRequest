@@ -18,7 +18,7 @@ import models.User;
 public abstract class BaseRequiredAuthenticationController extends HttpServlet {
 
     private boolean isAuthenticated(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("auth");
+        User user = (User) request.getSession().getAttribute("user");
         return user != null;
     }
 
@@ -29,7 +29,7 @@ public abstract class BaseRequiredAuthenticationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (isAuthenticated(request)) {
-            User user = (User) request.getSession().getAttribute("auth");
+            User user = (User) request.getSession().getAttribute("user");
             doPost(request, response, user);
         } else {
             response.getWriter().println("access denied!");
@@ -39,7 +39,7 @@ public abstract class BaseRequiredAuthenticationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (isAuthenticated(request)) {
-            User user = (User) request.getSession().getAttribute("auth");
+            User user = (User) request.getSession().getAttribute("user");
             doGet(request, response, user);
         } else {
             response.getWriter().println("access denied!");

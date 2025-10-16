@@ -29,7 +29,7 @@ public class LoginController extends HttpServlet {
        
         if (user != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("userName", user);
+            session.setAttribute("user", user);
             response.sendRedirect("view/dashboards/admin.jsp");
         } else {
             request.setAttribute("message", "Tài khoản hoặc mật khẩu không chính xác!");
