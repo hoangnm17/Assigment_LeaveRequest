@@ -14,7 +14,7 @@
     </head>
     <body>
 
-        <c:set var="role" value="${sessionScope.userName.role.roleName}" />
+        <c:set var="role" value="${sessionScope.user.role.roleName}" />
 
         <aside class="sidebar">
             <ul>
@@ -25,7 +25,7 @@
                         <li><a href="${pageContext.request.contextPath}/view/dashboards/admin.jsp">🏠 Trang chủ</a></li>
                         <li><a href="#">👥 Quản lý nhân viên</a></li>
                         <li><a href="#">📂 Quản lý phòng ban</a></li>
-                        <li><a href="#">📝 Tất cả đơn xin nghỉ</a></li>
+                        <li><a href="${pageContext.request.contextPath}/app/list">📝 Tất cả đơn xin nghỉ</a></li>
                         <li><a href="#">💬 Quản lý phản hồi</a></li>
                         <li><a href="#">📞 Quản lý liên hệ</a></li>
                         </c:when>
@@ -41,14 +41,14 @@
                     <%-- Case 3: Role is 'Employee' --%>
                     <c:when test="${role == 'Employee'}">
                         <li><a href="${pageContext.request.contextPath}/view/dashboards/employee.jsp">🏠 Trang chủ</a></li>
-                        <li><a href="#">📝 Tạo đơn xin nghỉ</a></li>
+                        <li><a href="${pageContext.request.contextPath}/app/create">📝 Tạo đơn xin nghỉ</a></li>
                         <li><a href="#">📋 Danh sách đơn của tôi</a></li>
                         <li><a href="#">👤 Hồ sơ cá nhân</a></li>
                         </c:when>
 
                     <%-- Default Case: No role found (not logged in) --%>
                     <c:otherwise>
-                        <li><a href="${pageContext.request.contextPath}/index.jsp">🔐 Vui lòng đăng nhập</a></li>
+                        <li><a href="${pageContext.request.contextPath}/login">🔐 Vui lòng đăng nhập</a></li>
                         </c:otherwise>
                     </c:choose>
 

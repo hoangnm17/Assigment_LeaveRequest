@@ -15,7 +15,7 @@
     <body>
 
         <%
-            User user = (User) session.getAttribute("userName");
+            User user = (User) session.getAttribute("user");
             String name = (user != null) ? user.getFullName() : "Khách";
         %>
         
