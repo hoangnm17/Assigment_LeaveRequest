@@ -4,21 +4,21 @@ import java.util.Date;
 
 public class LeaveRequest extends BaseModel {
 
-    private User employee;
+    private User user;
     private LeaveType leaveType;
-    private Date startDate;
-    private Date endDate;
+    private java.sql.Date startDate;
+    private java.sql.Date endDate;
     private String reason;
     private String status;
-    private Date requestDate;
+    private java.sql.Date createAt;
     private Integer approverID;
 
-    public User getEmployee() {
-        return employee;
+    public User getUser() {
+        return user;
     }
 
-    public void setEmployee(User employee) {
-        this.employee = employee;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LeaveType getLeaveType() {
@@ -29,19 +29,19 @@ public class LeaveRequest extends BaseModel {
         this.leaveType = leaveType;
     }
 
-    public Date getStartDate() {
+    public java.sql.Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(java.sql.Date startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public java.sql.Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(java.sql.Date endDate) {
         this.endDate = endDate;
     }
 
@@ -61,12 +61,12 @@ public class LeaveRequest extends BaseModel {
         this.status = status;
     }
 
-    public Date getRequestDate() {
-        return requestDate;
+    public java.sql.Date getCreateAt() {
+        return createAt;
     }
 
-    public void setRequestDate(Date requestDate) {
-        this.requestDate = requestDate;
+    public void setCreateAt(java.sql.Date createAt) {
+        this.createAt = createAt;
     }
 
     public Integer getApproverID() {
