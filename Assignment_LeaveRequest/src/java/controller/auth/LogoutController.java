@@ -1,4 +1,4 @@
-package controller.authentication;
+package controller.auth;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author 84911
  */
-@WebServlet(name = "LogoutController", urlPatterns = {"/logout"})
+@WebServlet(name = "LogoutController", urlPatterns = {"/auth/logout"})
 public class LogoutController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
