@@ -54,7 +54,7 @@
 
                 <%-- Common link for all logged-in users --%>
                 <c:if test="${not empty role}">
-                    <li><a href="${pageContext.request.contextPath}/logout">🚪 Đăng xuất</a></li>
+                    <li><a href="${pageContext.request.contextPath}/auth/logout">🚪 Đăng xuất</a></li>
                     </c:if>
             </ul>
         </aside>

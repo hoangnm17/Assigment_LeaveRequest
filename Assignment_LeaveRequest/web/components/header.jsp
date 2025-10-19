@@ -15,8 +15,8 @@
     <body>
 
         <%
-            User user = (User) session.getAttribute("user");
-            String name = (user != null) ? user.getFullName() : "Khách";
+            User user = (User) session.getAttribute("auth");
+            String name = (user != null) ? user.getEmployee().getEmployeeName() : "Khách";
         %>
         
         <header class="header">

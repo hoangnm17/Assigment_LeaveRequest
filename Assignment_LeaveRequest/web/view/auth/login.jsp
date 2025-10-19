@@ -35,8 +35,8 @@
                 <button type="submit" class="btn-primary">Đăng nhập</button>
             </div>
 
-            <c:if test="${not empty message}">
-                <p style="color: red;" class="error-message">${message}</p>
+            <c:if test="${not empty error}">
+                <p style="color: red;" class="error-message">${error}</p>
             </c:if>
 
         </form>
