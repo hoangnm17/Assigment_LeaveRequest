@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.Role;
+import models.Employee;
 import models.User;
 
 public class UserDBContext extends DBContext<User> {
@@ -12,27 +12,31 @@ public class UserDBContext extends DBContext<User> {
     public User getUser(String email, String password) {
         try {
             String sql = """
-                        SELECT u.UserID, u.Email, u.FullName, rt.RoleName
-                        FROM [Users] u
-                        JOIN [RoleTypes] rt ON u.RoleID = rt.RoleID
-                        WHERE u.Email = ? AND u.Password = ?
+                        SELECT u.UserID, u.UserName, u.[Password], u.IsActive, 
+                            e.EmployeeID, e.EmployeeName, e.Email, e.DepartmentID
+                            FROM [User] u
+                            JOIN Employee e ON u.EmployeeID = e.EmployeeID
+                            WHERE u.UserName = ? AND u.IsActive = 1
                         """;
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, email);
-            stm.setString(2, password);
 
             ResultSet rs = stm.executeQuery();
 
             if (rs.next()) {
+                Employee emp = new Employee();
+                emp.setId(rs.getInt("EmployeeID"));
+                emp.setEmployeeName(rs.getString("EmployeeName"));
+                emp.setEmail(rs.getString("Email"));
+                emp.setDepartmentID(rs.getInt("DepartmentID"));
+
                 User user = new User();
                 user.setId(rs.getInt("UserID"));
-                user.setEmail(rs.getString("Email"));
-                user.setFullName(rs.getNString("FullName"));
-                
-                Role role = new Role();
-                role.setRoleName(rs.getString("RoleName"));
-                user.setRole(role);
-                
+                user.setUserName(rs.getString("UserName"));
+                user.setPassword(rs.getString("Password"));
+                user.setActive(rs.getBoolean("IsActive"));
+                user.setEmployee(emp);
+
                 return user;
             }
         } catch (SQLException ex) {
@@ -43,6 +47,7 @@ public class UserDBContext extends DBContext<User> {
 
         return null;
     }
+
 
     @Override
     public ArrayList<User> list() {

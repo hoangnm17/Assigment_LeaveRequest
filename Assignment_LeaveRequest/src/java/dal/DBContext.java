@@ -14,7 +14,7 @@ public abstract class DBContext<T extends BaseModel> {
         try {
             String username = "sa";
             String password = "123";
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=LeaveManagementDB;encrypt=true;trustServerCertificate=true;";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=LeaveRequest;encrypt=true;trustServerCertificate=true;";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException ex) {

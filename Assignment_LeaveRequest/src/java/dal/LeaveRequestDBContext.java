@@ -27,7 +27,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             while (rs.next()) {
                 LeaveRequest appplication = new LeaveRequest();
                 User user = new User();
-                user.setFullName(rs.getNString("FullName"));
+                user.setUserName(rs.getNString("FullName"));
                 appplication.setUser(user);
                 LeaveType leaveType = new LeaveType();
                 leaveType.setTypeName(rs.getNString("LeaveTypeName"));
