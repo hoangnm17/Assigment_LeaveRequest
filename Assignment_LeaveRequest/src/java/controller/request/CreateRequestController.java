@@ -1,4 +1,4 @@
-package controller.create_request;
+package controller.request;
 
 import controller.auth.BaseRequiredAuthenticationController;
 import dal.LeaveRequestDBContext;
@@ -17,13 +17,13 @@ import models.User;
  *
  * @author 84911
  */
-@WebServlet(name = "CreateRequestController", urlPatterns = {"/app/create"})
+@WebServlet(name = "CreateRequestController", urlPatterns = {"/request/create"})
 public class CreateRequestController extends BaseRequiredAuthenticationController {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
-        request.getRequestDispatcher("../view/leaveRequest/requestApp.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/leaveRequest/requestApp.jsp").forward(request, response);
     }
 
     @Override
@@ -44,7 +44,8 @@ public class CreateRequestController extends BaseRequiredAuthenticationControlle
         LeaveRequestDBContext leave_req_db = new LeaveRequestDBContext();
         leave_req_db.insert(leave_req);
         request.setAttribute("message", "Sended applies!");
-        request.getRequestDispatcher("../view/leaveRequest/requestApp.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/leaveRequest/requestApp.jsp").forward(request, response);
+
     }
 
 }

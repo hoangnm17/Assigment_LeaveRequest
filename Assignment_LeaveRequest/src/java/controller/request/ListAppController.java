@@ -1,4 +1,4 @@
-package controller.create_request;
+package controller.request;
 
 import dal.LeaveRequestDBContext;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import models.LeaveRequest;
  *
  * @author 84911
  */
-@WebServlet(name = "ListAppController", urlPatterns = {"/app/list"})
+@WebServlet(name = "ListAppController", urlPatterns = {"/request/list"})
 public class ListAppController extends HttpServlet {
 
     protected void procesRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
