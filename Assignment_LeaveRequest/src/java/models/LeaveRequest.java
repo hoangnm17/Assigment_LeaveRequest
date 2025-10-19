@@ -11,7 +11,6 @@ public class LeaveRequest extends BaseModel {
     private String reason;
     private String status;
     private java.sql.Date createAt;
-    private Integer approverID;
 
     public User getUser() {
         return user;
@@ -69,11 +68,4 @@ public class LeaveRequest extends BaseModel {
         this.createAt = createAt;
     }
 
-    public Integer getApproverID() {
-        return approverID;
-    }
-
-    public void setApproverID(Integer approverID) {
-        this.approverID = approverID;
-    }
 }
