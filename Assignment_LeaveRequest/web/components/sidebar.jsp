@@ -11,53 +11,42 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+
     </head>
     <body>
 
-        <c:set var="role" value="${sessionScope.user.role.roleName}" />
-
         <aside class="sidebar">
-            <ul>
-                <%-- Using <c:choose> is the JSTL equivalent of a Java switch or if-else-if block --%>
-                <c:choose>
-                    <%-- Case 1: Role is 'Admin' --%>
-                    <c:when test="${role == 'Admin'}">
-                        <li><a href="${pageContext.request.contextPath}/view/dashboards/admin.jsp">🏠 Trang chủ</a></li>
-                        <li><a href="#">👥 Quản lý nhân viên</a></li>
-                        <li><a href="#">📂 Quản lý phòng ban</a></li>
-                        <li><a href="${pageContext.request.contextPath}/app/list">📝 Tất cả đơn xin nghỉ</a></li>
-                        <li><a href="#">💬 Quản lý phản hồi</a></li>
-                        <li><a href="#">📞 Quản lý liên hệ</a></li>
-                        </c:when>
+            <p>Xin chào, <strong>${sessionScope.auth.employee.employeeName}</strong>!</p>
+            <nav>
+                <ul>
+                    <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
 
-                    <%-- Case 2: Role is 'Manager' --%>
-                    <c:when test="${role == 'Manager'}">
-                        <li><a href="${pageContext.request.contextPath}/view/dashboards/manager.jsp">🏠 Trang chủ</a></li>
-                        <li><a href="#">📄 Đơn thuộc nhóm</a></li>
-                        <li><a href="#">📈 Thống kê nhóm</a></li>
-                        <li><a href="#">👤 Hồ sơ cá nhân</a></li>
-                        </c:when>
+                    <c:if test="${sessionScope.permissions.contains('leave:create')}">
+                        <li><a href="${pageContext.request.contextPath}/request/create">Tạo đơn xin nghỉ</a></li>
+                        </c:if>
 
-                    <%-- Case 3: Role is 'Employee' --%>
-                    <c:when test="${role == 'Employee'}">
-                        <li><a href="${pageContext.request.contextPath}/view/dashboards/employee.jsp">🏠 Trang chủ</a></li>
-                        <li><a href="${pageContext.request.contextPath}/app/create">📝 Tạo đơn xin nghỉ</a></li>
-                        <li><a href="#">📋 Danh sách đơn của tôi</a></li>
-                        <li><a href="#">👤 Hồ sơ cá nhân</a></li>
-                        </c:when>
+                    <c:if test="${sessionScope.permissions.contains('leave:approve:team')}">
+                        <li><a href="${pageContext.request.contextPath}/approval/list">Duyệt đơn cấp 1</a></li>
+                        </c:if>
 
-                    <%-- Default Case: No role found (not logged in) --%>
-                    <c:otherwise>
-                        <li><a href="${pageContext.request.contextPath}/login">🔐 Vui lòng đăng nhập</a></li>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:if test="${sessionScope.permissions.contains('leave:approve:dept')}">
+                        <li><a href="approval-queue?level=dept">Duyệt đơn cấp 2</a></li>
+                        </c:if>
 
-                <%-- Common link for all logged-in users --%>
-                <c:if test="${not empty role}">
-                    <li><a href="${pageContext.request.contextPath}/auth/logout">🚪 Đăng xuất</a></li>
-                    </c:if>
-            </ul>
+                    <c:if test="${sessionScope.permissions.contains('leave:view:all')}">
+                        <li><a href="${pageContext.request.contextPath}/request/list">Xem tất cả đơn</a></li>
+                        </c:if>
+
+                    <c:if test="${sessionScope.permissions.contains('admin:manage:users')}">
+                        <li><a href="admin/users">Quản lý người dùng</a></li>
+                        </c:if>
+
+                    <li><a href="${pageContext.request.contextPath}/auth/logout">Đăng xuất</a></li>
+                </ul>
+            </nav>
         </aside>
+
 
 
     </body>

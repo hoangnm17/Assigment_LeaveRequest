@@ -1,36 +1,83 @@
-
-/* 
-    Created on : Oct 11, 2025, 12:40:11 AM
-    Author     : 84911
-*/
-
-/* Sidebar */
-.sidebar {
-    position: fixed;
-    left: 0;
-    width: 220px;
-    height: calc(100%);
-    background-color: #2c3e50;
-    padding-top: 20px;
-}
-
-.sidebar ul {
-    list-style-type: none;
+/* === Đặt lại một số thuộc tính mặc định === */
+* {
+    margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-.sidebar li {
-    margin: 10px 0;
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f4f6f9;
+    display: flex;
 }
 
-.sidebar a {
-    text-decoration: none;
-    color: #ecf0f1;
+/* === Sidebar tổng thể === */
+.sidebar {
+    width: 240px;
+    background-color: #1f2937; /* Màu xám đen kiểu Tailwind (gray-800) */
+    color: #f3f4f6;            /* Màu chữ sáng */
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: width 0.3s ease;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
+}
+
+/* === Phần chào người dùng === */
+.sidebar p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #ffffff; /* Xám nhạt */
+}
+
+.sidebar strong {
+    color: #f9fafb;
+}
+
+/* === Menu danh sách === */
+.sidebar nav ul {
+    list-style: none;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 10px;
+}
+
+/* === Link trong menu === */
+.sidebar nav ul li a {
     display: block;
-    padding: 10px 20px;
-    transition: background 0.2s;
+    text-decoration: none;
+    color: #f3f4f6;
+    padding: 10px 15px;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
 }
 
-.sidebar a:hover {
-    background-color: #34495e;
+/* Hover & Active */
+.sidebar nav ul li a:hover {
+    background-color: #374151; /* Màu hover xám đậm hơn */
+    color: #60a5fa;            /* Màu xanh nhạt */
+    padding-left: 20px;
+}
+
+/* Đăng xuất (màu đỏ nhẹ) */
+.sidebar nav ul li:last-child a {
+    color: #f87171;
+}
+
+.sidebar nav ul li:last-child a:hover {
+    background-color: #7f1d1d;
+    color: #fff;
+}
+
+/* === Khi hiển thị nội dung chính bên cạnh sidebar === */
+.main-content {
+    margin-left: 240px;
+    padding: 30px;
+    flex: 1;
 }
