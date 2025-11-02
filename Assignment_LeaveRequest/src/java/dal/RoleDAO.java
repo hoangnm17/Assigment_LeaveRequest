@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Role;
 
-public class RoleDBContext extends DBContext<Role> {
+public class RoleDAO extends DBContext<Role> {
 
     public List<String> getRole(int userId) {
         List<String> permissions = new ArrayList<>();
@@ -32,7 +32,7 @@ public class RoleDBContext extends DBContext<Role> {
                 permissions.add(rs.getString("FeatureKey"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return permissions;

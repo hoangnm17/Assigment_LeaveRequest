@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 import models.Employee;
 import models.User;
 
-public class UserDBContext extends DBContext<User> {
+public class UserDAO extends DBContext<User> {
 
     public User getUser(String email, String password) {
         try {
             String sql = """
                         SELECT u.UserID, u.UserName, u.[Password], u.IsActive, 
-                            e.EmployeeID, e.EmployeeName, e.Email, e.DepartmentID
+                                e.EmployeeID, e.EmployeeName, e.Email, e.DepartmentID
                             FROM [User] u
                             JOIN Employee e ON u.EmployeeID = e.EmployeeID
                             WHERE u.UserName = ? AND u.IsActive = 1
@@ -40,14 +40,13 @@ public class UserDBContext extends DBContext<User> {
                 return user;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             closeConnection();
         }
 
         return null;
     }
-
 
     @Override
     public ArrayList<User> list() {
