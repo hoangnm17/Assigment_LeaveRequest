@@ -1,0 +1,144 @@
+<%-- 
+    Document   : requestApp
+    Created on : Oct 13, 2025
+    Author     : 84911
+--%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <title>Tạo đơn xin nghỉ</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styledashboard.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style_requestapp.css">
+
+        <style>
+            /* Một số style nhẹ để hiển thị đẹp hơn */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f6f8;
+                margin: 0;
+                display: flex;
+            }
+
+            .main-content {
+                flex: 1;
+                padding: 40px;
+            }
+
+            .card {
+                background-color: white;
+                border-radius: 12px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                padding: 30px;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            h2 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: #333;
+            }
+
+            label {
+                display: block;
+                margin-top: 15px;
+                font-weight: bold;
+            }
+
+            input[type="datetime-local"],
+            select,
+            textarea {
+                width: 100%;
+                padding: 10px;
+                margin-top: 6px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 14px;
+            }
+
+            button {
+                display: block;
+                width: 100%;
+                background-color: #4A90E2;
+                color: white;
+                font-size: 16px;
+                padding: 12px;
+                border: none;
+                border-radius: 8px;
+                margin-top: 25px;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background-color: #357ABD;
+            }
+
+            .message {
+                text-align: center;
+                margin-top: 20px;
+                font-weight: bold;
+            }
+
+            .message.success {
+                color: green;
+            }
+
+            .message.error {
+                color: red;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <%@ include file="/components/sidebar.jsp" %>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>📝 Gửi đơn xin nghỉ</h2>
+
+                <form action="${pageContext.request.contextPath}/request/create" method="post">
+
+                    <!-- Loại nghỉ -->
+                    <label for="leaveType">Loại nghỉ</label>
+                    <select id="leaveType" name="leaveType" required>
+                        <option value="">-- Chọn loại nghỉ --</option>
+                        <c:forEach var="leavetype" items="${requestScope.leaveTypes}">
+                            <option value="${leavetype.id}">${leavetype.typeName}</option>
+                        </c:forEach>
+                    </select>
+
+                    <!-- Ngày giờ bắt đầu -->
+                    <label for="startDate">Từ ngày & giờ</label>
+                    <input type="date" id="startDate" name="startDate" required>
+
+                    <!-- Ngày giờ kết thúc -->
+                    <label for="endDate">Đến ngày & giờ</label>
+                    <input type="date" id="endDate" name="endDate" required>
+
+                    <!-- Lý do -->
+                    <label for="reason">Lý do</label>
+                    <textarea id="reason" name="reason" placeholder="Nhập lý do xin nghỉ..." rows="4" required></textarea>
+
+                    <button type="submit">Gửi đơn</button>
+                </form>
+
+                <!-- Hiển thị thông báo -->
+                <c:if test="${not empty message}">
+                    <p class="message
+                       <c:out value='${message.startsWith("✅") ? "success" : "error"}'/>">
+                        ${message}
+                    </p>
+                </c:if>
+
+            </div>
+        </div>
+
+    </body>
+</html>
