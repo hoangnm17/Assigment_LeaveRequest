@@ -27,11 +27,7 @@
                         </c:if>
 
                     <c:if test="${sessionScope.permissions.contains('leave:approve:team')}">
-                        <li><a href="${pageContext.request.contextPath}/approval/list">Duyệt đơn cấp 1</a></li>
-                        </c:if>
-
-                    <c:if test="${sessionScope.permissions.contains('leave:approve:dept')}">
-                        <li><a href="approval-queue?level=dept">Duyệt đơn cấp 2</a></li>
+                        <li><a href="${pageContext.request.contextPath}/approval/list">Duyệt đơn</a></li>
                         </c:if>
 
                     <c:if test="${sessionScope.permissions.contains('leave:view:all')}">
