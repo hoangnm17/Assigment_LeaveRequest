@@ -11,7 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/sidebar.css">
 
     </head>
     <body>
@@ -35,7 +35,7 @@
                         </c:if>
 
                     <c:if test="${sessionScope.permissions.contains('admin:manage:users')}">
-                        <li><a href="admin/users">Quản lý người dùng</a></li>
+                        <li><a href="${pageContext.request.contextPath}/agenda">Quản lý người dùng</a></li>
                         </c:if>
 
                     <li><a href="${pageContext.request.contextPath}/auth/logout">Đăng xuất</a></li>

@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="models.User"%>
+<%@page import="model.user.User"%>
 <!DOCTYPE html>
 <html>
     <head>
