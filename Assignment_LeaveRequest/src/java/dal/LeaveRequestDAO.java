@@ -1,14 +1,14 @@
 package dal;
 
 import java.util.ArrayList;
-import models.LeaveRequest;
+import model.leave.LeaveRequest;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.ApprovalStep;
-import models.LeaveType;
-import models.Employee;
+import model.leave.ApprovalStep;
+import model.leave.LeaveType;
+import model.employee.Employee;
 
 public class LeaveRequestDAO extends DBContext<LeaveRequest> {
 
