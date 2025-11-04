@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.Role;
+import model.user.Role;
 
 public class RoleDAO extends DBContext<Role> {
 

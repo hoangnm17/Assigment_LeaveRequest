@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.Employee;
-import models.User;
+import model.employee.Employee;
+import model.user.User;
 
 public class UserDAO extends DBContext<User> {
 

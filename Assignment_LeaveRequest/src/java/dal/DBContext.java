@@ -6,16 +6,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.BaseModel;
 
+import utils.ConfigLoader; // class load config từ WEB-INF/config.properties
+
 public abstract class DBContext<T extends BaseModel> {
 
     protected Connection connection;
 
     public DBContext() {
+        
         try {
-            String username = "sa";
-            String password = "123";
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=LeaveRequest;encrypt=true;trustServerCertificate=true;";
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String username = ConfigLoader.get("db.username");
+            String password = ConfigLoader.get("db.password");
+            String url = ConfigLoader.get("db.url");
+            Class.forName(ConfigLoader.get("db.driver"));
             connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
