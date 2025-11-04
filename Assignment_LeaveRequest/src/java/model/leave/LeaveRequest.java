@@ -1,23 +1,38 @@
-package models;
+package model.leave;
 
-import java.util.Date;
+// Dùng java.util.Date để lưu cả ngày và giờ
+import java.util.Date; 
+import models.BaseModel;
+import model.employee.Employee;
 
 public class LeaveRequest extends BaseModel {
 
-    private User user;
+    // 1. Sửa: Dùng Employee và đổi tên cho khớp với CSDL (Created_by)
+    private Employee created_by; 
     private LeaveType leaveType;
     private java.sql.Date startDate;
     private java.sql.Date endDate;
     private String reason;
     private String status;
-    private java.sql.Date createAt;
+    private Date created_time;
+    private ApprovalStep appStep;
 
-    public User getUser() {
-        return user;
+    public ApprovalStep getAppStep() {
+        return appStep;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAppStep(ApprovalStep appStep) {
+        this.appStep = appStep;
+    }
+
+    // --- Getter/Setter đã cập nhật ---
+
+    public Employee getCreated_by() {
+        return created_by;
+    }
+
+    public void setCreated_by(Employee created_by) {
+        this.created_by = created_by;
     }
 
     public LeaveType getLeaveType() {
@@ -60,12 +75,12 @@ public class LeaveRequest extends BaseModel {
         this.status = status;
     }
 
-    public java.sql.Date getCreateAt() {
-        return createAt;
+    public Date getCreated_time() {
+        return created_time;
     }
 
-    public void setCreateAt(java.sql.Date createAt) {
-        this.createAt = createAt;
+    public void setCreated_time(Date created_time) {
+        this.created_time = created_time;
     }
 
 }

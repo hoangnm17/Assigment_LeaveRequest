@@ -1,4 +1,7 @@
-package models;
+package model.user;
+
+import models.BaseModel;
+import model.employee.Employee;
 
 public class User extends BaseModel {
 

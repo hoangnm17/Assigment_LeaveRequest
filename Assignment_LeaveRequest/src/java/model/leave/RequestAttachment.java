@@ -1,6 +1,8 @@
-package models;
+package model.leave;
 
+import model.leave.LeaveRequest;
 import java.sql.Date;
+import models.BaseModel;
 
 public class RequestAttachment extends BaseModel {
 

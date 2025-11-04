@@ -1,8 +1,10 @@
 
 
-package models;
+package model.user;
 
+import model.user.User;
 import java.sql.Date;
+import models.BaseModel;
 
 public class Delegation extends BaseModel {
     private User originalApprover;

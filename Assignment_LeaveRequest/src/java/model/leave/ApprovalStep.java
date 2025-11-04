@@ -1,12 +1,14 @@
-package models;
+package model.leave;
 
+import model.leave.LeaveRequest;
 import java.sql.Date;
+import models.BaseModel;
+import model.user.User;
 
 public class ApprovalStep extends BaseModel {
 
     private LeaveRequest request;
     private User manager; // ID của người duyệt
-    private int stepOrder;
     private String status;
     private java.sql.Date actionDate; // Có thể null
     private String notes; // Có thể null
@@ -26,14 +28,6 @@ public class ApprovalStep extends BaseModel {
 
     public void setManager(User manager) {
         this.manager = manager;
-    }
-
-    public int getStepOrder() {
-        return stepOrder;
-    }
-
-    public void setStepOrder(int stepOrder) {
-        this.stepOrder = stepOrder;
     }
 
     public String getStatus() {

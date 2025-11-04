@@ -1,6 +1,8 @@
 
 
-package models;
+package model.employee;
+
+import models.BaseModel;
 
 public class Department extends BaseModel {
     private String deptName;

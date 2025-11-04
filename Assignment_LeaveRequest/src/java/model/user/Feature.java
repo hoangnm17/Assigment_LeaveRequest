@@ -1,4 +1,6 @@
-package models;
+package model.user;
+
+import models.BaseModel;
 
 public class Feature extends BaseModel {
 

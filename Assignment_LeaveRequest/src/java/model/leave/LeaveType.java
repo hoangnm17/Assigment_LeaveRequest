@@ -1,4 +1,6 @@
-package models;
+package model.leave;
+
+import models.BaseModel;
 
 public class LeaveType extends BaseModel {
 

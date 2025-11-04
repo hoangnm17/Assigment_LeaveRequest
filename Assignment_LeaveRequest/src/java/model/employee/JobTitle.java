@@ -1,4 +1,4 @@
-package models;
+package model.employee;
 
 public class JobTitle {
     private String titleName;
