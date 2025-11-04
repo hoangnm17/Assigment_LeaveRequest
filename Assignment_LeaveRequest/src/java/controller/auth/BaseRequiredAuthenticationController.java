@@ -1,48 +1,48 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller.auth;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 import java.io.IOException;
-import models.User;
+import model.user.User;
 
 /**
- *
- * @author 84911
+ * Lớp này override processGet/processPost của BaseController để thêm bước kiểm
+ * tra đăng nhập.
  */
-public abstract class BaseRequiredAuthenticationController extends HttpServlet {
+public abstract class BaseRequiredAuthenticationController extends BaseController {
 
-    private boolean isAuthenticated(HttpServletRequest request) {
+    /**
+     * Override hook của BaseController
+     */
+    @Override
+    protected final void processGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("auth");
-        return user != null;
-    }
-
-    protected abstract void doPost(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException;
-
-    protected abstract void doGet(HttpServletRequest request, HttpServletResponse response, User user) throws ServletException, IOException;
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (isAuthenticated(request)) {
-            User user = (User) request.getSession().getAttribute("auth");
-            doPost(request, response, user);
-        } else {
-            response.getWriter().println("access denied!");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
         }
+        processGet(request, response, user);
     }
 
+    /**
+     * Override hook của BaseController
+     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (isAuthenticated(request)) {
-            User user = (User) request.getSession().getAttribute("auth");
-            doGet(request, response, user);
-        } else {
-            response.getWriter().println("access denied!");
+    protected final void processPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("auth");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
         }
+        processPost(request, response, user);
     }
+
+    // Hook mới cho lớp con (ví dụ: trang Profile)
+    protected abstract void processGet(HttpServletRequest request, HttpServletResponse response, User user)
+            throws ServletException, IOException;
+
+    protected abstract void processPost(HttpServletRequest request, HttpServletResponse response, User user)
+            throws ServletException, IOException;
 }

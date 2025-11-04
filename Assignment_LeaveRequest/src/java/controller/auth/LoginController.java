@@ -4,8 +4,8 @@
  */
 package controller.auth;
 
-import dal.RoleDBContext;
-import dal.UserDBContext;
+import dal.RoleDAO;
+import dal.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import models.User;
+import model.user.User;
 
 /**
  *
@@ -28,19 +28,17 @@ public class LoginController extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        UserDBContext userDAO = new UserDBContext();
+        UserDAO userDAO = new UserDAO();
         User account = userDAO.getUser(username, password);
 
         if (account != null) {
-            RoleDBContext roleDAO = new RoleDBContext();
+            RoleDAO roleDAO = new RoleDAO();
             List<String> permissions = roleDAO.getRole(account.getId());
-            System.out.println("----- QUYEN CUA USER " + account.getUserName()
-                    + " (UserID thuc te la: " + account.getId() + "): " + permissions);
             HttpSession session = request.getSession();
             session.setAttribute("auth", account);
             session.setAttribute("permissions", permissions);
 
-            response.sendRedirect(request.getContextPath() + "/view/dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/home");
         } else {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không chính xác!");
             request.getRequestDispatcher("../view/auth/login.jsp").forward(request, response);
