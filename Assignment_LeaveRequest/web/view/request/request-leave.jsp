@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style_requestapp.css">
 
         <style>
-            /* Một số style nhẹ để hiển thị đẹp hơn */
             body {
                 font-family: Arial, sans-serif;
                 background-color: #f4f6f8;
@@ -51,7 +50,7 @@
                 font-weight: bold;
             }
 
-            input[type="datetime-local"],
+            input[type="date"],
             select,
             textarea {
                 width: 100%;
@@ -60,6 +59,10 @@
                 border: 1px solid #ccc;
                 border-radius: 8px;
                 font-size: 14px;
+            }
+
+            textarea {
+                resize: vertical;
             }
 
             button {
@@ -97,7 +100,7 @@
 
     <body>
 
-        <%@ include file="/components/sidebar.jsp" %>
+        <%@ include file="/common/sidebar.jsp" %>
 
         <div class="main-content">
             <div class="card">
@@ -110,31 +113,38 @@
                     <select id="leaveType" name="leaveType" required>
                         <option value="">-- Chọn loại nghỉ --</option>
                         <c:forEach var="leavetype" items="${requestScope.leaveTypes}">
-                            <option value="${leavetype.id}">${leavetype.typeName}</option>
+                            <option value="${leavetype.id}"
+                                <c:if test="${param.leaveType == leavetype.id}">selected</c:if>>
+                                ${leavetype.typeName}
+                            </option>
                         </c:forEach>
                     </select>
 
-                    <!-- Ngày giờ bắt đầu -->
-                    <label for="startDate">Từ ngày & giờ</label>
-                    <input type="date" id="startDate" name="startDate" required>
+                    <!-- Ngày bắt đầu -->
+                    <label for="startDate">Từ ngày</label>
+                    <input type="date" id="startDate" name="startDate"
+                           value="<c:out value='${param.startDate}'/>" required>
 
-                    <!-- Ngày giờ kết thúc -->
-                    <label for="endDate">Đến ngày & giờ</label>
-                    <input type="date" id="endDate" name="endDate" required>
+                    <!-- Ngày kết thúc -->
+                    <label for="endDate">Đến ngày</label>
+                    <input type="date" id="endDate" name="endDate"
+                           value="<c:out value='${param.endDate}'/>" required>
 
                     <!-- Lý do -->
                     <label for="reason">Lý do</label>
-                    <textarea id="reason" name="reason" placeholder="Nhập lý do xin nghỉ..." rows="4" required></textarea>
+                    <textarea id="reason" name="reason" rows="4" required><c:out value='${param.reason}'/></textarea>
 
                     <button type="submit">Gửi đơn</button>
                 </form>
 
-                <!-- Hiển thị thông báo -->
+                <!-- Hiển thị thông báo lỗi từ Controller -->
+                <c:if test="${not empty error}">
+                    <p class="message error">${error}</p>
+                </c:if>
+
+                <!-- Hiển thị thông báo thành công -->
                 <c:if test="${not empty message}">
-                    <p class="message
-                       <c:out value='${message.startsWith("✅") ? "success" : "error"}'/>">
-                        ${message}
-                    </p>
+                    <p class="message success">${message}</p>
                 </c:if>
 
             </div>

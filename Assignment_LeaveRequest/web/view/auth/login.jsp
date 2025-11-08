@@ -165,7 +165,7 @@
 
             <div class="field">
                 <label for="username">Tên đăng nhập</label>
-                <input id="username" name="username" type="text" required maxlength="60" autocomplete="username" />
+                <input id="username" name="username" type="text" required maxlength="60" autocomplete="username" value="${username}"/>
                 <small class="error" id="err-username"></small>
             </div>
 

@@ -1,11 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <title>Duyệt đơn nghỉ phép</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/pagination.css">
 
         <style>
             body {
@@ -61,22 +64,28 @@
             form {
                 margin-bottom: 20px;
             }
+            .pagination-wrapper {
+                width: 100%;
+                margin-top: 20px;
+                clear: both;
+            }
         </style>
     </head>
     <body>
-        <%@ include file="/components/sidebar.jsp" %>
+        <%@ include file="/common/sidebar.jsp" %>
+
 
         <div class="main-content">
             <h2>📋 Danh sách đơn xin nghỉ</h2>
 
-            <!-- Bộ lọc trạng thái -->
             <form action="${pageContext.request.contextPath}/request/list" method="get">
                 <label for="status"><b>Lọc theo trạng thái:</b></label>
                 <select name="status" id="status" onchange="this.form.submit()">
+                    <option value="inprogress" ${status eq 'pending' || empty status ? 'selected' : ''}>Đang chờ</option>
                     <option value="all" ${status eq 'all' ? 'selected' : ''}>Tất cả</option>
                     <option value="approved" ${status eq 'approved' ? 'selected' : ''}>Đã duyệt</option>
                     <option value="rejected" ${status eq 'rejected' ? 'selected' : ''}>Từ chối</option>
-                    <option value="pending" ${status eq 'pending' ? 'selected' : ''}>Đang chờ</option>
+                    
                 </select>
             </form>
 
@@ -95,6 +104,7 @@
                             <th>Trạng thái</th>
                             <th>Ghi chú duyệt</th>
                             <th>Ngày tạo</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,13 +123,21 @@
                                 </td>
                                 <td>${req.appStep.notes}</td>
                                 <td>${req.created_time}</td>
+                                <td>
+                                    <c:if test="${req.created_by.id == auth.id && fn:toLowerCase(req.status) eq 'in progress'}">
+                                        <a href="${pageContext.request.contextPath}/request/edit?id=${req.id}" class="btn-edit">✏️ Sửa</a>
+                                    </c:if>
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>
-
                 </table>
             </c:if>
-        </div>
 
+            <div class="pagination-wrapper">
+                <%@ include file="/common/pagination.jsp" %>
+            </div>
+
+        </div>
     </body>
 </html>

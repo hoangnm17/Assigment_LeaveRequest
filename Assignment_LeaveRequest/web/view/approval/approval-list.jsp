@@ -6,6 +6,9 @@
         <meta charset="UTF-8">
         <title>Duyệt đơn nghỉ phép</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+        
+        <%-- 1. THÊM LINK CSS PHÂN TRANG --%>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/pagination.css">
 
         <style>
             body {
@@ -52,39 +55,27 @@
                 background-color: #357ABD;
             }
 
-            /* Modal */
+            /* Modal (Giữ nguyên) */
             .modal {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                padding-top: 100px;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0,0,0,0.5);
+                /* ... */
             }
             .modal-content {
-                background-color: #fff;
-                margin: auto;
-                padding: 20px;
-                border-radius: 12px;
-                width: 60%;
+                /* ... */
             }
             .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                cursor: pointer;
+                /* ... */
             }
-            .close:hover {
-                color: black;
+            
+            /* 2. THÊM CSS CHO WRAPPER */
+            .pagination-wrapper {
+                width: 100%;
+                margin-top: 20px; 
+                clear: both; 
             }
         </style>
     </head>
     <body>
-        <%@ include file="/components/sidebar.jsp" %>
+        <%@ include file="/common/sidebar.jsp" %>
 
         <div class="main-content">
             <h2>📋 Danh sách đơn xin nghỉ</h2>
@@ -127,7 +118,14 @@
                     </tbody>
                 </table>
             </c:if>
-        </div>
+            
+            <div class="pagination-wrapper">
+                 <%@ include file="/common/pagination.jsp" %>
+            </div>
+            
+        </div> <%-- Thẻ đóng của .main-content --%>
 
+        <%-- Đã xóa include phân trang khỏi vị trí sai này --%>
+        
     </body>
 </html>
