@@ -72,7 +72,7 @@ public abstract class BaseRequiredAuthorizedController extends BaseRequiredAuthe
             processGetAuthorized(request, response, user);
         } else {
             // Không có quyền
-            response.sendRedirect(request.getContextPath() + "/access-denied.jsp");
+            response.sendRedirect(request.getContextPath() + "/home");
         }
     }
 
@@ -89,7 +89,7 @@ public abstract class BaseRequiredAuthorizedController extends BaseRequiredAuthe
             processPostAuthorized(request, response, user);
         } else {
             // Không có quyền
-            response.sendRedirect(request.getContextPath() + "/access-denied.jsp");
+            response.sendRedirect(request.getContextPath() + "/home");
         }
     }
 }

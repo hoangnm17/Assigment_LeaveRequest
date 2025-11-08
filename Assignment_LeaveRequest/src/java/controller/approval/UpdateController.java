@@ -65,7 +65,7 @@ public class UpdateController extends BaseRequiredAuthorizedController {
             LeaveRequest lr = new LeaveRequest();
             lr.setId(requestId);
             lr.setStatus(Status);
-            leaveDAO.update(lr);
+            leaveDAO.updateStatus(lr);
 
             // 3️⃣ Thông báo kết quả và chuyển hướng
             response.sendRedirect(request.getContextPath() + "/approval/list");

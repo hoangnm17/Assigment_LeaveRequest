@@ -60,7 +60,6 @@ public class AgendaController extends BaseRequiredAuthorizedController {
         // SỬA 3: Đổi 'account' thành 'user' cho khớp tên tham số
         employees = employeeDAO.listByManagerHierarchy(user.getEmployee().getId());
 
-        System.out.println(employees.size());
         // 3. Lấy danh sách đơn nghỉ phép trong tuần
         List<LeaveRequest> leaveRequests = leaveRequestDAO.listByDateRange(weekStart, weekEnd);
 

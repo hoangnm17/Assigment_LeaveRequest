@@ -40,6 +40,7 @@ public class LoginController extends HttpServlet {
 
             response.sendRedirect(request.getContextPath() + "/home");
         } else {
+            request.setAttribute("username", username);
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không chính xác!");
             request.getRequestDispatcher("../view/auth/login.jsp").forward(request, response);
         }
