@@ -1,6 +1,8 @@
 package model.employee;
 
-public class JobTitle {
+import models.BaseModel;
+
+public class JobTitle  extends BaseModel {
     private String titleName;
     private String description;
 

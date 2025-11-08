@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.employee.Department;
 import model.employee.Employee;
+import model.employee.JobTitle;
 
 public class EmployeeDAO extends DBContext<Employee> {
 
@@ -21,8 +23,15 @@ public class EmployeeDAO extends DBContext<Employee> {
                     emp.setId(rs.getInt("EmployeeID")); // Giả sử model của bạn có setId
                     emp.setEmployeeName(rs.getString("EmployeeName"));
                     emp.setEmail(rs.getString("Email"));
-                    emp.setDepartmentID(rs.getInt("DepartmentID"));
-                    emp.setJobTitleID(rs.getInt("JobTitleID"));
+
+                    Department dept = new Department();
+                    dept.setId(rs.getInt("DepartmentID"));
+                    emp.setDepartment(dept);
+
+                    JobTitle jobt = new JobTitle();
+                    jobt.setId(rs.getInt("JobTitleID"));
+
+                    emp.setJobTitle(jobt);
                     emp.setManagerID(rs.getInt("ManagerID")); // Rất quan trọng
                     return emp;
                 }
@@ -61,8 +70,14 @@ public class EmployeeDAO extends DBContext<Employee> {
                 emp.setEmail(rs.getString("Email"));
                 emp.setHireDate(rs.getDate("HireDate"));
                 emp.setTerminationDate(rs.getDate("TerminationDate"));
-                emp.setDepartmentID(rs.getInt("DepartmentID"));
-                emp.setJobTitleID(rs.getInt("JobTitleID"));
+                Department dept = new Department();
+                dept.setId(rs.getInt("DepartmentID"));
+                emp.setDepartment(dept);
+
+                JobTitle jobt = new JobTitle();
+                jobt.setId(rs.getInt("JobTitleID"));
+
+                emp.setJobTitle(jobt);
                 emp.setManagerID(rs.getInt("ManagerID"));
                 list.add(emp);
             }
@@ -90,8 +105,14 @@ public class EmployeeDAO extends DBContext<Employee> {
                 emp.setEmail(rs.getString("Email"));
                 emp.setHireDate(rs.getDate("HireDate"));
                 emp.setTerminationDate(rs.getDate("TerminationDate"));
-                emp.setDepartmentID(rs.getInt("DepartmentID"));
-                emp.setJobTitleID(rs.getInt("JobTitleID"));
+                Department dept = new Department();
+                dept.setId(rs.getInt("DepartmentID"));
+                emp.setDepartment(dept);
+
+                JobTitle jobt = new JobTitle();
+                jobt.setId(rs.getInt("JobTitleID"));
+
+                emp.setJobTitle(jobt);
                 emp.setManagerID(rs.getInt("ManagerID"));
                 list.add(emp);
             }

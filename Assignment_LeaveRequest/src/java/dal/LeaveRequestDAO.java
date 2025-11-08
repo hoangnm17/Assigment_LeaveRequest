@@ -12,7 +12,7 @@ import model.employee.Employee;
 
 public class LeaveRequestDAO extends DBContext<LeaveRequest> {
 
-    public ArrayList<LeaveRequest> getRequestsByManagerHierarchy(int managerId) {
+    public ArrayList<LeaveRequest> getRequestsByManagerHierarchy(int managerId, int pageIndex, int pageSize) {
         ArrayList<LeaveRequest> list = new ArrayList<>();
         String sql = """
         WITH Org AS (
@@ -39,12 +39,15 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
         JOIN Org e ON r.Created_by = e.EmployeeID
         WHERE r.Status = 'In progress'
         ORDER BY r.Created_time DESC
+        OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     """;
 
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, managerId);
-            ResultSet rs = stm.executeQuery();
+            stm.setInt(2, (pageIndex - 1) * pageSize);
+            stm.setInt(3, pageSize);
 
+            ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 LeaveRequest req = new LeaveRequest();
                 req.setId(rs.getInt("RequestID"));
@@ -67,16 +70,46 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
         return list;
     }
 
-    public ArrayList<LeaveRequest> getRequestsByEmployee(int employeeId, String statusFilter) {
+    public int countRequestsByManagerHierarchy(int managerId) {
+        // SQL này phải sử dụng logic CTE y hệt như phương thức get
+        String sql = """
+            WITH Org AS (
+                SELECT *, 0 AS lvl
+                FROM Employee e
+                WHERE e.EmployeeID = ?
+                UNION ALL
+                SELECT c.*, o.lvl + 1 AS lvl
+                FROM Employee c
+                JOIN Org o ON c.ManagerID = o.EmployeeID
+            )
+            SELECT COUNT(DISTINCT r.RequestID)
+            FROM LeaveRequest r
+            JOIN Org e ON r.Created_by = e.EmployeeID
+            WHERE r.Status = 'In progress'
+        """;
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, managerId); // Chỉ có 1 tham số
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1); // Trả về kết quả đếm
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ArrayList<LeaveRequest> getRequestsByEmployee(int employeeId, String statusFilter, int pageIndex, int pageSize) {
         ArrayList<LeaveRequest> list = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder("""
         SELECT 
             lr.RequestID,
+            e.EmployeeID,                                  
             e.EmployeeName,
             lt.TypeName,
             lr.StartDate,
@@ -92,36 +125,37 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
         WHERE lr.Created_by = ?
     """);
 
-        // Nếu có lọc theo trạng thái (Approved, Rejected, In progress)
         if (statusFilter != null && !"All".equalsIgnoreCase(statusFilter)) {
             sql.append(" AND lr.Status = ?");
         }
 
-        sql.append(" ORDER BY lr.Created_time DESC");
+        sql.append(" ORDER BY lr.Created_time DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
         try (PreparedStatement stm = connection.prepareStatement(sql.toString())) {
-            stm.setInt(1, employeeId);
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, employeeId);
 
             if (statusFilter != null && !"All".equalsIgnoreCase(statusFilter)) {
-                stm.setString(2, statusFilter);
+                stm.setString(paramIndex++, statusFilter);
             }
+
+            stm.setInt(paramIndex++, (pageIndex - 1) * pageSize);
+            stm.setInt(paramIndex++, pageSize);
 
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
                 LeaveRequest req = new LeaveRequest();
 
-                // === Thông tin người tạo đơn (nhân viên) ===
                 Employee e = new Employee();
                 e.setEmployeeName(rs.getNString("EmployeeName"));
+                e.setId(rs.getInt("EmployeeID"));
                 req.setCreated_by(e);
 
-                // === Loại nghỉ phép ===
                 LeaveType lt = new LeaveType();
                 lt.setTypeName(rs.getNString("TypeName"));
                 req.setLeaveType(lt);
 
-                // === Thông tin đơn nghỉ ===
                 req.setId(rs.getInt("RequestID"));
                 req.setStartDate(rs.getDate("StartDate"));
                 req.setEndDate(rs.getDate("EndDate"));
@@ -129,7 +163,6 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
                 req.setStatus(rs.getString("Status"));
                 req.setCreated_time(rs.getTimestamp("Created_time"));
 
-                // === Ghi chú phê duyệt (Notes) ===
                 ApprovalStep appStep = new ApprovalStep();
                 appStep.setNotes(rs.getNString("Notes"));
                 req.setAppStep(appStep);
@@ -139,11 +172,30 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
 
         } catch (SQLException ex) {
             Logger.getLogger(LeaveRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            closeConnection();
         }
 
         return list;
+    }
+
+    public int countRequestsByEmployee(int employeeId, String statusFilter) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM LeaveRequest WHERE Created_by = ?");
+        if (statusFilter != null && !"All".equalsIgnoreCase(statusFilter)) {
+            sql.append(" AND Status = ?");
+        }
+
+        try (PreparedStatement stm = connection.prepareStatement(sql.toString())) {
+            stm.setInt(1, employeeId);
+            if (statusFilter != null && !"All".equalsIgnoreCase(statusFilter)) {
+                stm.setString(2, statusFilter);
+            }
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LeaveRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     @Override
@@ -200,7 +252,7 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
     }
 
     @Override
-    public LeaveRequest get(int id
+    public LeaveRequest get(int requestId
     ) {
         LeaveRequest lr = null;
         String sql = """
@@ -218,7 +270,7 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
         """;
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setInt(1, id);
+            st.setInt(1, requestId);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 LeaveRequest application = new LeaveRequest();
@@ -246,6 +298,54 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
             Logger.getLogger(LeaveRequestDAO.class.getName()).log(Level.SEVERE, null, e);
         }
 
+        return lr;
+    }
+
+    public LeaveRequest getByRequestId(int id) {
+        LeaveRequest lr = null;
+        String sql = """
+        SELECT 
+            lr.RequestID,
+            lr.Created_by AS EmployeeID,
+            e.EmployeeName, 
+            lr.LeaveTypeID,
+            lt.TypeName, 
+            lr.StartDate, 
+            lr.EndDate, 
+            lr.Reason, 
+            lr.Status, 
+            lr.Created_time
+        FROM LeaveRequest lr
+        JOIN Employee e ON lr.Created_by = e.EmployeeID
+        JOIN LeaveType lt ON lr.LeaveTypeID = lt.LeaveTypeID
+        WHERE lr.RequestID = ?
+    """;
+
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                lr = new LeaveRequest();
+                lr.setId(rs.getInt("RequestID"));
+                lr.setReason(rs.getNString("Reason"));
+                lr.setStartDate(rs.getDate("StartDate"));
+                lr.setEndDate(rs.getDate("EndDate"));
+                lr.setStatus(rs.getString("Status"));
+                lr.setCreated_time(rs.getTimestamp("Created_time"));
+
+                Employee emp = new Employee();
+                emp.setId(rs.getInt("EmployeeID"));
+                emp.setEmployeeName(rs.getNString("EmployeeName"));
+                lr.setCreated_by(emp);
+
+                LeaveType lt = new LeaveType();
+                lt.setId(rs.getInt("LeaveTypeID"));
+                lt.setTypeName(rs.getNString("TypeName"));
+                lr.setLeaveType(lt);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(LeaveRequestDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
         return lr;
     }
 
@@ -359,8 +459,7 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
         return list;
     }
 
-    @Override
-    public void update(LeaveRequest model
+    public void updateStatus(LeaveRequest model
     ) {
         String sql = "UPDATE LeaveRequest SET Status = ? WHERE RequestID = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
@@ -368,6 +467,31 @@ public class LeaveRequestDAO extends DBContext<LeaveRequest> {
             st.setInt(2, model.getId());
             st.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(LeaveRequest model
+    ) {
+        try {
+            String sql = """
+                    UPDATE LeaveRequest
+                    SET 
+                        Reason = ?, 
+                        StartDate = ?, 
+                        EndDate = ?, 
+                        LeaveTypeID = ?
+                    WHERE RequestID = ? AND Status = 'In progress'
+        """;
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, model.getReason());
+            stm.setDate(2, model.getStartDate());
+            stm.setDate(3, model.getEndDate());
+            stm.setInt(4, model.getLeaveType().getId());
+            stm.setInt(5, model.getId());
+            stm.executeUpdate();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

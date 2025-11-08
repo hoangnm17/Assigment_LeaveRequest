@@ -8,10 +8,25 @@ public class Employee extends BaseModel {
     private String email;
     private java.sql.Date hireDate;
     private java.sql.Date terminationDate;
-    private int departmentID;
-    private int jobTitleID;
+    private Department department;
+    private JobTitle jobTitle;
     private Integer managerID;
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public JobTitle getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(JobTitle jobTitle) {
+        this.jobTitle = jobTitle;
+    }
 
     public String getEmployeeName() {
         return employeeName;
@@ -43,22 +58,6 @@ public class Employee extends BaseModel {
 
     public void setTerminationDate(java.sql.Date terminationDate) {
         this.terminationDate = terminationDate;
-    }
-
-    public int getDepartmentID() {
-        return departmentID;
-    }
-
-    public void setDepartmentID(int departmentID) {
-        this.departmentID = departmentID;
-    }
-
-    public int getJobTitleID() {
-        return jobTitleID;
-    }
-
-    public void setJobTitleID(int jobTitleID) {
-        this.jobTitleID = jobTitleID;
     }
 
     public Integer getManagerID() {

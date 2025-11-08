@@ -26,6 +26,8 @@ public class LeaveTypeDAO extends DBContext<LeaveType> {
             return list;
         } catch (SQLException ex) {
             Logger.getLogger(LeaveTypeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeConnection();
         }
 
         return null;

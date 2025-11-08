@@ -4,22 +4,24 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.employee.Department;
 import model.employee.Employee;
 import model.user.User;
 
 public class UserDAO extends DBContext<User> {
 
-    public User getUser(String email, String password) {
+    public User getUser(String username, String password) {
         try {
             String sql = """
                         SELECT u.UserID, u.UserName, u.[Password], u.IsActive, 
                                 e.EmployeeID, e.EmployeeName, e.Email, e.DepartmentID
                             FROM [User] u
                             JOIN Employee e ON u.EmployeeID = e.EmployeeID
-                            WHERE u.UserName = ? AND u.IsActive = 1
+                            WHERE u.UserName = ? AND u.[Password] = ? AND u.IsActive = 1
                         """;
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, email);
+            stm.setString(1, username);
+            stm.setString(2, password);
 
             ResultSet rs = stm.executeQuery();
 
@@ -28,7 +30,9 @@ public class UserDAO extends DBContext<User> {
                 emp.setId(rs.getInt("EmployeeID"));
                 emp.setEmployeeName(rs.getString("EmployeeName"));
                 emp.setEmail(rs.getString("Email"));
-                emp.setDepartmentID(rs.getInt("DepartmentID"));
+                Department dept = new Department();
+                dept.setId(rs.getInt("DepartmentID"));
+                emp.setDepartment(dept);
 
                 User user = new User();
                 user.setId(rs.getInt("UserID"));

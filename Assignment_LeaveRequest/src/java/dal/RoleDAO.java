@@ -33,6 +33,8 @@ public class RoleDAO extends DBContext<Role> {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeConnection();
         }
 
         return permissions;
