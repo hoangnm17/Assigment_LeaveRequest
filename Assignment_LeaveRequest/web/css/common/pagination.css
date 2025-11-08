@@ -1,0 +1,75 @@
+
+/* 
+    Created on : Nov 5, 2025, 3:06:37 AM
+    Author     : 84911
+*/
+
+/* * CSS Thuần cho Component Phân Trang
+ * (Dán vào file stylesheet của bạn)
+ */
+
+/* Container để căn giữa toàn bộ thanh phân trang */
+.pagination-container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Căn giữa */
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Thẻ ul chứa các nút */
+ul.pagination {
+    display: flex;
+    list-style-type: none; /* Bỏ dấu chấm của li */
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden; /* Giúp bo góc các nút con */
+}
+
+/* Các mục (li) trong danh sách */
+ul.pagination li {
+    /* Không cần style gì */
+}
+
+/* Các thẻ link (a) bên trong */
+ul.pagination li a {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #007BFF; /* Màu chữ chính */
+    background-color: #fff;
+    border-left: 1px solid #ddd;
+    transition: background-color 0.2s;
+}
+
+/* Bỏ viền trái cho nút đầu tiên */
+ul.pagination li:first-child a {
+    border-left: none;
+}
+
+/* Hiệu ứng khi rê chuột */
+ul.pagination li a:hover {
+    background-color: #f4f4f4;
+}
+
+/* Trạng thái ACTIVE (trang hiện tại) */
+ul.pagination li.active a {
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    cursor: default;
+}
+
+ul.pagination li.active a:hover {
+    background-color: #007BFF; /* Giữ nguyên màu khi hover */
+}
+
+/* Trạng thái DISABLED (nút bị vô hiệu hóa) */
+ul.pagination li.disabled a {
+    color: #999;
+    background-color: #f9f9f9;
+    pointer-events: none; /* Ngăn click */
+    cursor: default;
+}
