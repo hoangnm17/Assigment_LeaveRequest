@@ -6,17 +6,17 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigLoader {
-    private static Properties config = new Properties();
+
+    private static final Properties config = new Properties();
 
     public static void load(ServletContext context) {
         try (InputStream is = context.getResourceAsStream("/WEB-INF/config.properties")) {
-            if (is != null) {
-                config.load(is);
-            } else {
+            if (is == null) {
                 throw new RuntimeException("Không tìm thấy file /WEB-INF/config.properties");
             }
+            config.load(is);
         } catch (IOException e) {
-            throw new RuntimeException("Lỗi load /WEB-INF/config.properties", e);
+            throw new RuntimeException("Lỗi khi đọc file /WEB-INF/config.properties", e);
         }
     }
 
