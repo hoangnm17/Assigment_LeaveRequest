@@ -17,11 +17,19 @@ public abstract class BaseRequiredAuthenticationController extends BaseControlle
     @Override
     protected final void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute("auth");
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("auth") : null;
+
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
+
+        if (!user.isActive()) {
+            response.sendRedirect(request.getContextPath() + "/home");
+            return;
+        }
+
         processGet(request, response, user);
     }
 
@@ -31,11 +39,19 @@ public abstract class BaseRequiredAuthenticationController extends BaseControlle
     @Override
     protected final void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute("auth");
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("auth") : null;
+
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
+
+        if (!user.isActive()) {
+            response.sendRedirect(request.getContextPath() + "/home");
+            return;
+        }
+
         processPost(request, response, user);
     }
 
