@@ -1,6 +1,5 @@
 package dal;
 
-import dal.DBContext;
 import model.leave.LeaveRequest;
 import java.sql.*;
 import java.util.ArrayList;

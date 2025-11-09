@@ -7,7 +7,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Map; // Đảm bảo đã import Map
 import model.leave.LeaveRequest;
 import model.user.User;
 import utils.ConfigLoader;
@@ -24,7 +27,7 @@ public class ListRequestController extends BaseRequiredAuthorizedController {
     @Override
     protected void processGetAuthorized(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
-
+        
         // --- 1️⃣ Lấy và chuẩn hóa tham số status ---
         String statusParam = request.getParameter("status");
         String statusForDAO = null; // Giá trị status sẽ truyền vào DAO (null = "all")
@@ -75,47 +78,87 @@ public class ListRequestController extends BaseRequiredAuthorizedController {
         // --- 3️⃣ Lấy tổng số bản ghi TRƯỚC ---
         LeaveRequestDAO dao = new LeaveRequestDAO();
         int employeeId = user.getEmployee().getId();
-
-        // Chỉ gọi ĐẾM (count) trước
         int totalRecords = dao.countRequestsByEmployee(employeeId, statusForDAO);
 
         // --- 4️⃣ Tính toán và chuẩn hóa phân trang ---
-        // 4a. Sửa lỗi 1: Đảm bảo pageIndex luôn là số dương (lớn hơn 0)
         if (page < 1) {
             page = 1;
         }
-
-        // 4b. Tính tổng số trang
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
-
-        // 4c. Sửa lỗi 3: Xử lý trường hợp không có bản ghi nào
-        // Luôn đảm bảo có ít nhất 1 trang (kể cả đó là trang rỗng)
         if (totalPages == 0) {
             totalPages = 1;
         }
-
-        // 4d. Sửa lỗi 2: Xử lý trường hợp pageIndex vượt quá tổng số trang
-        // Nếu người dùng yêu cầu trang 10 mà chỉ có 5 trang, tự động đặt về trang 5
         if (page > totalPages) {
             page = totalPages;
         }
 
         // --- 5️⃣ Lấy danh sách (SAU KHI đã chuẩn hóa page) ---
-        // Bây giờ mới gọi 'get' với số 'page' đã được chuẩn hóa
         ArrayList<LeaveRequest> list = dao.getRequestsByEmployee(employeeId, statusForDAO, page, pageSize);
+
+        
+        // --- (PHẦN MỚI) XÂY DỰNG QUERY STRING CHO PHÂN TRANG ---
+        // Xây dựng một chuỗi query chứa tất cả filter, NGOẠI TRỪ 'page'
+        StringBuilder queryStringForPagination = new StringBuilder();
+        
+        // Lặp qua tất cả tham số trên URL (ví dụ: status=all, search=abc)
+        for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+            String paramName = entry.getKey();
+            
+            // Chỉ lấy các tham số KHÁC 'page'
+            if (!paramName.equalsIgnoreCase("page")) { 
+                for (String paramValue : entry.getValue()) {
+                    // Nếu đã có tham số, thêm dấu &
+                    if (queryStringForPagination.length() > 0) {
+                        queryStringForPagination.append("&");
+                    }
+                    // Thêm cặp key=value đã được encode
+                    queryStringForPagination.append(URLEncoder.encode(paramName, StandardCharsets.UTF_8.name()));
+                    queryStringForPagination.append("=");
+                    queryStringForPagination.append(URLEncoder.encode(paramValue, StandardCharsets.UTF_8.name()));
+                }
+            }
+        }
+
 
         // --- 6️⃣ Gửi dữ liệu sang JSP ---
         request.setAttribute("listApp", list);
         request.setAttribute("status", statusForJSP); // Gửi status đã chuẩn hóa (all, pending,...)
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("paginationURL", "/request/list");
+        
+        // URL gốc của Controller (ví dụ: /request/list)
+        request.setAttribute("paginationURL", "/request/list"); 
+        
+        // (MỚI) Gửi chuỗi filter đã build (ví dụ: "status=all")
+        System.out.println(queryStringForPagination);
+        request.setAttribute("paginationQuery", queryStringForPagination.toString()); 
+
         request.getRequestDispatcher("/view/request/list-request.jsp").forward(request, response);
     }
 
+    /**
+     * Xử lý filter (POST) bằng cách áp dụng Post-Redirect-Get (PRG)
+     * (Phần này sẽ chạy nếu form của bạn dùng method="POST")
+     */
     @Override
     protected void processPostAuthorized(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
-        processGetAuthorized(request, response, user);
+        
+        String status = request.getParameter("status");
+        String redirectURL = request.getContextPath() + "/request/list";
+        StringBuilder queryParams = new StringBuilder();
+
+        if (status != null && !status.isEmpty()) {
+            queryParams.append("status=")
+                       .append(URLEncoder.encode(status, StandardCharsets.UTF_8.name()));
+        }
+        
+        // (Mở rộng cho các filter khác nếu cần)
+
+        if (queryParams.length() > 0) {
+            redirectURL += "?" + queryParams.toString();
+        }
+
+        response.sendRedirect(redirectURL);
     }
 }

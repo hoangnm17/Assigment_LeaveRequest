@@ -17,7 +17,7 @@ public class UserDAO extends DBContext<User> {
                                 e.EmployeeID, e.EmployeeName, e.Email, e.DepartmentID
                             FROM [User] u
                             JOIN Employee e ON u.EmployeeID = e.EmployeeID
-                            WHERE u.UserName = ? AND u.[Password] = ? AND u.IsActive = 1
+                            WHERE u.UserName = ? AND u.[Password] = ?
                         """;
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, username);

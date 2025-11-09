@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import model.leave.LeaveRequest;
 import model.user.User;
 import utils.ConfigLoader;
@@ -15,69 +16,73 @@ import utils.ConfigLoader;
 @WebServlet(name = "UpdateController", urlPatterns = {"/approval/update"})
 public class UpdateController extends BaseRequiredAuthorizedController {
 
-    /**
-     * SỬA 1: BẮT BUỘC CÓ - Khai báo quyền
-     * (Bạn cần điền tên quyền của mình ở đây, ví dụ "leave:approve")
-     */
     @Override
     protected String getRequiredPermission() {
-        return ConfigLoader.get("leave.approve");
+        return ConfigLoader.get("approve.update");
     }
 
-    /**
-     * SỬA 2: Đổi tên 'doGet' thành 'processGetAuthorized'
-     * Logic forward GỐC của bạn được giữ nguyên.
-     */
     @Override
     protected void processGetAuthorized(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
-        
-        // GIỮ NGUYÊN LOGIC GỐC CỦA BẠN
+        int requestId = Integer.parseInt(request.getParameter("id"));
+
+        ArrayList<Integer> validIds = (ArrayList<Integer>) request.getSession().getAttribute("list_approval_ids");
+
+        if (validIds == null || !validIds.contains(requestId)) {
+            // Nếu người dùng truy cập trái phép
+            request.getSession().setAttribute("approval_error", "Bạn không được phép truy cập đơn này!");
+            response.sendRedirect(request.getContextPath() + "/approval/list");
+            return;
+        }
+
+        // Cho phép xem chi tiết đơn
         request.getRequestDispatcher("/view/approval/approval-detail.jsp").forward(request, response);
     }
 
-    /**
-     * SỬA 3: Đổi tên 'doPost' thành 'processPostAuthorized'
-     * Logic update 2 bảng GỐC của bạn được giữ nguyên.
-     */
     @Override
     protected void processPostAuthorized(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
 
-        // GIỮ NGUYÊN LOGIC GỐC CỦA BẠN
         try {
-            // Lấy dữ liệu từ form
             int requestId = Integer.parseInt(request.getParameter("requestId"));
             String action = request.getParameter("action"); // "approve" hoặc "reject"
             String note = request.getParameter("notes");
 
-            // Khởi tạo DAO
+            // DAO
             ApprovalStepDAO stepDAO = new ApprovalStepDAO();
             LeaveRequestDAO leaveDAO = new LeaveRequestDAO();
 
-            // Xác định trạng thái dựa theo action
+            LeaveRequest lr = leaveDAO.getByRequestId(requestId);
+            if (lr == null) {
+                request.getSession().setAttribute("approval_error", "Không tìm thấy đơn nghỉ!");
+                response.sendRedirect(request.getContextPath() + "/approval/list");
+                return;
+            }
+
+            // Trạng thái mới
             String Status = action.equalsIgnoreCase("approve") ? "Approved" : "Rejected";
 
-            // 1️⃣ Cập nhật bảng ApprovalStep
+            // Cập nhật 2 bảng
             stepDAO.updateStepStatus(requestId, user.getId(), Status, note);
-
-            // 2️⃣ Cập nhật bảng LeaveRequest
-            LeaveRequest lr = new LeaveRequest();
-            lr.setId(requestId);
             lr.setStatus(Status);
             leaveDAO.updateStatus(lr);
 
-            // 3️⃣ Thông báo kết quả và chuyển hướng
+            // ✅ Gửi thông báo thành công
+            String msg = action.equalsIgnoreCase("approve")
+                    ? "✅ Đơn nghỉ #" + requestId + " đã được phê duyệt thành công!"
+                    : "❌ Đơn nghỉ #" + requestId + " đã bị từ chối!";
+            request.getSession().setAttribute("approval_message", msg);
+
+            // Quay lại danh sách duyệt
             response.sendRedirect(request.getContextPath() + "/approval/list");
 
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Request ID không hợp lệ!");
+            request.getSession().setAttribute("approval_error", "Mã đơn không hợp lệ!");
+            response.sendRedirect(request.getContextPath() + "/approval/list");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Đã xảy ra lỗi khi cập nhật đơn nghỉ!");
+            request.getSession().setAttribute("approval_error", "Đã xảy ra lỗi khi cập nhật đơn nghỉ!");
+            response.sendRedirect(request.getContextPath() + "/approval/list");
         }
     }
-
-    // SỬA 4: Xóa 2 phương thức thừa (processGet và processPost)
-    // (Vì chúng không cần thiết và gây lỗi biên dịch)
 }

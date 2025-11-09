@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import model.leave.LeaveRequest;
@@ -21,7 +22,7 @@ public class ListApprovalController extends BaseRequiredAuthorizedController {
 
     @Override
     protected String getRequiredPermission() {
-        return ConfigLoader.get("leave.view.all");
+        return ConfigLoader.get("approve.view.all");
     }
 
     @Override
@@ -77,8 +78,14 @@ public class ListApprovalController extends BaseRequiredAuthorizedController {
         // 6. Lấy danh sách (chỉ sau khi đã chuẩn hóa pageIndex)
         ArrayList<LeaveRequest> approvalList = dao.getRequestsByManagerHierarchy(user.getId(), pageIndex, pageSize);
 
-        // 7. Set thuộc tính cho JSP
-        request.setAttribute("list_approval", approvalList);
+        ArrayList<Integer> approvalIds = new ArrayList<>();
+        for (LeaveRequest lr : approvalList) {
+            approvalIds.add(lr.getId());
+        }
+        HttpSession session = request.getSession();
+        session.setAttribute("list_approval_ids", approvalIds);
+
+        request.setAttribute("list_approval", approvalList);      
         request.setAttribute("currentPage", pageIndex); // Dùng pageIndex đã được chuẩn hóa
         request.setAttribute("totalPages", totalPages);
 
