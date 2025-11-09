@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <title>Duyệt đơn nghỉ phép</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-        
+
         <%-- 1. THÊM LINK CSS PHÂN TRANG --%>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/pagination.css">
 
@@ -65,17 +65,32 @@
             .close {
                 /* ... */
             }
-            
+
             /* 2. THÊM CSS CHO WRAPPER */
             .pagination-wrapper {
                 width: 100%;
-                margin-top: 20px; 
-                clear: both; 
+                margin-top: 20px;
+                clear: both;
             }
         </style>
+        <script src="${pageContext.request.contextPath}/js/notify.js"></script>
     </head>
     <body>
         <%@ include file="/common/sidebar.jsp" %>
+
+        <c:if test="${not empty sessionScope.approval_error}">
+            <script>
+                showError("${sessionScope.approval_error}");
+            </script>
+            <c:remove var="approval_error" scope="session" />
+        </c:if>
+
+        <c:if test="${not empty sessionScope.approval_message}">
+            <script>
+                showMessage("${sessionScope.approval_message}");
+            </script>
+            <c:remove var="approval_message" scope="session" />
+        </c:if>
 
         <div class="main-content">
             <h2>📋 Danh sách đơn xin nghỉ</h2>
@@ -118,14 +133,13 @@
                     </tbody>
                 </table>
             </c:if>
-            
+
             <div class="pagination-wrapper">
-                 <%@ include file="/common/pagination.jsp" %>
+                <%@ include file="/common/pagination.jsp" %>
             </div>
-            
+
         </div> <%-- Thẻ đóng của .main-content --%>
 
         <%-- Đã xóa include phân trang khỏi vị trí sai này --%>
-        
     </body>
 </html>

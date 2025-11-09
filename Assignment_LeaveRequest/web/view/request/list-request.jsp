@@ -85,7 +85,7 @@
                     <option value="all" ${status eq 'all' ? 'selected' : ''}>Tất cả</option>
                     <option value="approved" ${status eq 'approved' ? 'selected' : ''}>Đã duyệt</option>
                     <option value="rejected" ${status eq 'rejected' ? 'selected' : ''}>Từ chối</option>
-                    
+
                 </select>
             </form>
 
@@ -135,6 +135,7 @@
             </c:if>
 
             <div class="pagination-wrapper">
+                
                 <%@ include file="/common/pagination.jsp" %>
             </div>
 

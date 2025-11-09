@@ -22,19 +22,19 @@
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
 
-                    <c:if test="${sessionScope.permissions.contains('leave:create')}">
+                    <c:if test="${sessionScope.auth.active and sessionScope.permissions.contains('leave:*')}">
                         <li><a href="${pageContext.request.contextPath}/request/create">Tạo đơn xin nghỉ</a></li>
                         </c:if>
 
-                    <c:if test="${sessionScope.permissions.contains('leave:approve:team')}">
+                    <c:if test="${sessionScope.auth.active and sessionScope.permissions.contains('approve:*')}">
                         <li><a href="${pageContext.request.contextPath}/approval/list">Duyệt đơn</a></li>
                         </c:if>
 
-                    <c:if test="${sessionScope.permissions.contains('leave:view:all')}">
+                    <c:if test="${sessionScope.auth.active and sessionScope.permissions.contains('leave:*')}">
                         <li><a href="${pageContext.request.contextPath}/request/list">Xem tất cả đơn</a></li>
                         </c:if>
 
-                    <c:if test="${sessionScope.permissions.contains('admin:manage:users')}">
+                    <c:if test="${sessionScope.auth.active and sessionScope.permissions.contains('agenda')}">
                         <li><a href="${pageContext.request.contextPath}/agenda">Quản lý người dùng</a></li>
                         </c:if>
 

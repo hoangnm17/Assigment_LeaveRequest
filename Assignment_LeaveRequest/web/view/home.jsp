@@ -132,7 +132,7 @@
                 </a>
 
                 <br>
-                <img src="${pageContext.request.contextPath}/images/welcome.png" alt="Welcome" class="welcome-img"/>
+
             </div>
         </div>
     </body>
