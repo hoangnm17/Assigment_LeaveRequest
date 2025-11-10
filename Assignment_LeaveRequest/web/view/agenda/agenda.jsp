@@ -161,7 +161,7 @@
         <div class="toolbar">
             <label>Năm:</label>
             <select id="year" onchange="reloadWeeks()">
-                <c:forEach var="y" begin="2023" end="2026">
+                <c:forEach var="y" begin="2020" end="2026">
                     <option value="${y}" ${y == weekStart.year ? 'selected' : ''}>${y}</option>
                 </c:forEach>
             </select>

@@ -11,7 +11,7 @@ public class AppLifecycleListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
-        try {
+        try {   
             ConfigLoader.load(context);
         } catch (Exception e) {
             throw new RuntimeException("Không thể load file cấu hình.", e);
